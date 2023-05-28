@@ -2,11 +2,12 @@
 
 # configs
 AUUID=446c00ce-95ab-4bbe-9971-876eac9bcb34
-CADDYIndexPage=https://github.com/AYJCSGM/mikutap/archive/master.zip
-CONFIGCADDY=https://raw.githubusercontent.com/uyguiyg/hapttaoayrailwayxay29/master/etc/Caddyfile
+CADDYIndexPage=https://github.com/PavelDoGreat/WebGL-Fluid-Simulation/archive/master.zip
+CONFIGCADDY=https://raw.githubusercontent.com/uyguiyg/hapttaoayrailwayxay29/etc/Caddyfile
 CONFIGXRAY=https://raw.githubusercontent.com/uyguiyg/hapttaoayrailwayxay29/etc/xray.json
 ParameterSSENCYPT=chacha20-ietf-poly1305
-StoreFiles=https://raw.githubusercontent.com/Lbingyi/HerokuXray/master/etc/StoreFiles
+Xray_Newv=`wget --no-check-certificate -qO- https://api.github.com/repos/XTLS/Xray-core/tags | grep 'name' | cut -d\" -f4 | head -1 | cut -b 2-`
+
 #PORT=4433
 mkdir -p /etc/caddy/ /usr/share/caddy && echo -e "User-agent: *\nDisallow: /" >/usr/share/caddy/robots.txt
 wget $CADDYIndexPage -O /usr/share/caddy/index.html && unzip -qo /usr/share/caddy/index.html -d /usr/share/caddy/ && mv /usr/share/caddy/*/* /usr/share/caddy/
@@ -14,8 +15,9 @@ wget -qO- $CONFIGCADDY | sed -e "1c :$PORT" -e "s/\$AUUID/$AUUID/g" -e "s/\$MYUU
 wget -qO- $CONFIGXRAY | sed -e "s/\$AUUID/$AUUID/g" -e "s/\$ParameterSSENCYPT/$ParameterSSENCYPT/g" >/xray.json
 
 # storefiles
-mkdir -p /usr/share/caddy/$AUUID && wget -O /usr/share/caddy/$AUUID/StoreFiles $StoreFiles
-wget -P /usr/share/caddy/$AUUID -i /usr/share/caddy/$AUUID/StoreFiles
+mkdir -p /usr/share/caddy/$AUUID
+wget -P /usr/share/caddy/$AUUID https://github.com/XTLS/Xray-core/releases/download/v$Xray_Newv/Xray-linux-64.zip
+
 
 for file in $(ls /usr/share/caddy/$AUUID); do
     [[ "$file" != "StoreFiles" ]] && echo \<a href=\""$file"\" download\>$file\<\/a\>\<br\> >>/usr/share/caddy/$AUUID/ClickToDownloadStoreFiles.html
